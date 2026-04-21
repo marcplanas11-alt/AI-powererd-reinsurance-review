@@ -1,3 +1,11 @@
+## 🚀 What This Project Does
+
+AI-powered multi-agent system that reviews reinsurance contracts and identifies:
+- compliance risks (sanctions, DORA)
+- missing clauses
+- delegated authority issues
+- prioritised actions for human review
+
 🧠 AI-Powered Reinsurance Contract Review
 📌 Problem
 
