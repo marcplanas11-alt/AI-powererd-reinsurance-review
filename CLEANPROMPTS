@@ -1,0 +1,488 @@
+s
+
+AI workflow for reinsurance operations
+
+
+!pip install anthropic -q
+     
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/635.9 kB ? eta -:--:--
+   ━━━━━━━━━━━━━━━━━━━╺━━━━━━━━━━━━━━━━━━━━ 307.2/635.9 kB 9.3 MB/s eta 0:00:01
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 635.9/635.9 kB 9.6 MB/s eta 0:00:00
+
+import anthropic
+
+client = anthropic.Anthropic(
+    api_key="YOUR_API_KEY"
+)
+     
+
+contract_text = """
+This binding authority agreement includes monthly bordereaux reporting obligations.
+The coverholder must comply with all applicable sanctions laws.
+No explicit DORA-related operational resilience obligations are included.
+The agreement does not clearly define escalation procedures for regulatory breaches.
+The wording on delegated authority limits is partially unclear.
+"""
+     
+
+def compliance_agent(contract_text):
+    prompt = f"""
+    You are a reinsurance compliance analyst.
+
+    Review this contract:
+
+    {contract_text}
+
+    Identify:
+    - sanctions clauses
+    - regulatory clauses
+    - missing clauses
+    - red flags
+
+    Return structured bullet points.
+    """
+
+    response = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=500,
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    return response.content
+     
+
+def compliance_agent(contract_text):
+    prompt = f"""
+    You are a reinsurance compliance analyst.
+
+    Review this contract:
+
+    {contract_text}
+
+    Identify:
+    - sanctions clauses
+    - regulatory clauses
+    - missing clauses
+    - red flags
+
+    Return output in valid markdown with these sections only:
+    1. Sanctions Clauses
+    2. Regulatory Clauses
+    3. Missing Clauses
+    4. Red Flags
+    5. Human Review Required
+
+    Keep it concise and complete.
+    """
+    response = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=700,
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response.content[0].text
+     
+
+def terms_agent(contract_text):
+    pass
+     
+
+def terms_agent(contract_text):
+    prompt = f"""
+    You are a reinsurance technical analyst.
+
+    Extract technical terms from this contract:
+
+    {contract_text}
+
+    Focus on:
+    - limits
+    - bordereaux obligations
+    - reporting frequency
+    - unclear wording
+
+    Return structured bullet points.
+    """
+
+    response = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=500,
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    return response.content[0].text
+     
+
+terms = terms_agent(contract_text)
+print(terms)
+     
+## Technical Term Extraction – Binding Authority Agreement
+
+---
+
+### 📋 Limits
+- **Delegated authority limits** – present but **partially unclear wording**; scope and thresholds not precisely defined
+- No explicit maximum liability or per-risk limits identified in the extracted text
+
+---
+
+### 📊 Bordereaux Obligations
+- **Monthly bordereaux reporting** – explicitly required
+- Applies to the **coverholder** as the reporting party
+- No detail provided on bordereaux *type* (e.g., premium vs. claims bordereaux)
+
+---
+
+### 🕐 Reporting Frequency
+- Frequency: **Monthly** (as stated for bordereaux)
+- No additional reporting cycles (quarterly, annual) referenced
+- No escalation reporting timeline defined for regulatory breaches ⚠️
+
+---
+
+### ⚠️ Unclear Wording / Gaps Identified
+- **Delegated authority limits** – language described as *"partially unclear"*; requires clarification
+- **Escalation procedures for regulatory breaches** – *not clearly defined*; material omission
+- **DORA compliance** – operational resilience obligations *entirely absent*; potential regulatory exposure
+- **Sanctions compliance** – obligation referenced but no enforcement mechanism or breach procedure outlined
+
+---
+
+### 🔴 Key Risk Flags
+> - Ambiguity in delegated authority limits may create **coverage disputes**
+> - Absence of escalation procedures represents a **governance gap**
+> - No DORA provisions may indicate **regulatory non-compliance** risk for EU-regulated entities
+
+result = terms_agent(contract_text)
+print(result)
+     
+## Technical Term Extraction – Binding Authority Agreement
+
+---
+
+### 📋 Limits
+- **Delegated authority limits** – present but **partially unclear**; wording requires clarification to confirm scope and boundaries of underwriting authority granted to coverholder
+
+---
+
+### 📊 Bordereaux Obligations
+- **Bordereaux reporting** – explicitly required
+- **Reporting frequency** – **monthly** cycle specified
+- No detail extracted regarding:
+  - Premium bordereaux vs. claims bordereaux distinction
+  - Submission deadlines within the monthly cycle
+  - Required data fields/format specifications
+
+---
+
+### 🔁 Reporting Frequency
+- **Monthly bordereaux** – sole reporting cadence identified
+- No mention of:
+  - Ad hoc or event-driven reporting triggers
+  - Escalation reporting timelines
+  - Regulatory breach notification windows
+
+---
+
+### ⚠️ Unclear Wording / Gaps Identified
+- **Delegated authority limits** – *partially unclear* → requires redrafting for precision
+- **Escalation procedures for regulatory breaches** – *not clearly defined* → material omission
+- **DORA compliance** *(operational resilience)* – *explicitly absent* → potential regulatory exposure gap
+- **Sanctions compliance** – obligation referenced but no procedural mechanism or breach response protocol defined
+
+---
+
+### 🔴 Priority Items for Review
+> 1. Clarify delegated authority limit wording
+> 2. Define escalation procedures for regulatory breaches
+> 3. Assess DORA applicability and insert relevant provisions if required
+> 4. Strengthen sanctions clause with procedural obligations
+
+compliance = compliance_agent(contract_text)
+terms = terms_agent(contract_text)
+
+print("=== COMPLIANCE ===")
+print(compliance)
+
+print("\n=== TERMS ===")
+print(terms)
+     
+=== COMPLIANCE ===
+# Reinsurance Contract Compliance Review
+
+---
+
+## 1. Sanctions Clauses
+
+- ✅ **Present:** General sanctions compliance obligation imposed on the coverholder
+- ⚠️ Clause references "all applicable sanctions laws" but **lacks specificity** — no named regimes cited (e.g., OFAC, UN, UK HMT, EU)
+- No **sanctions screening procedures** or **breach notification requirements** defined
+- No **termination rights** explicitly linked to sanctions violations
+
+---
+
+## 2. Regulatory Clauses
+
+- ✅ **Present:** Monthly bordereaux reporting obligations included
+- ✅ Coverholder bound to comply with applicable sanctions laws (regulatory crossover)
+- ❌ **No DORA (Digital Operational Resilience Act)** obligations included — relevant if parties are EU-regulated entities post-January 2025
+- ❌ **No escalation procedures** defined for regulatory breaches
+
+---
+
+## 3. Missing Clauses
+
+| Missing Clause | Risk Level |
+|---|---|
+| DORA / Operational Resilience obligations | 🔴 High |
+| Escalation procedures for regulatory breaches | 🔴 High |
+| Named sanctions regimes (OFAC, HMT, EU, UN) | 🔴 High |
+| Clear delegated authority limits | 🔴 High |
+| Sanctions breach notification & remediation | 🟠 Medium |
+| Data protection / GDPR obligations | 🟠 Medium |
+| Business continuity & disaster recovery provisions | 🟠 Medium |
+| Audit rights clause | 🟠 Medium |
+| Governing law & jurisdiction clause (not confirmed) | 🟡 Low–Medium |
+
+---
+
+## 4. Red Flags
+
+> ⚠️ **Critical issues identified requiring immediate attention**
+
+- 🚩 **Delegated authority limits are partially unclear** — creates underwriting exposure and potential coverage disputes; Lloyd's/FCA binding authority standards likely not met
+- 🚩 **No DORA compliance language** — non-compliant for EU/EEA regulated entities as of January 17, 2025
+- 🚩 **Absent escalation procedures** — regulatory breach handling is undefined, exposing both parties to compounded regulatory liability
+- 🚩 **Sanctions clause lacks enforcement mechanism** — a general obligation without procedural teeth may be insufficient under FCA, PRA, or Lloyd's Minimum Standards
+- 🚩 **Bordereaux reporting defined but no consequences** for late/non-submission
+
+---
+
+## 5. Human Review Required
+
+| Area | Reviewer | Priority |
+|---|---|---|
+| Delegated authority wording — clarification & redraft | Underwriting Counsel | 🔴 Immediate |
+| DORA gap assessment | Compliance / Legal | 🔴 Immediate |
+| Sanctions clause enhancement | Sanctions Compliance Officer | 🔴 Immediate |
+
+=== TERMS ===
+## Technical Term Extraction – Binding Authority Agreement
+
+---
+
+### 📋 Limits
+- **Delegated authority limits** – Referenced but **partially unclear**; scope and monetary thresholds not explicitly defined
+- Risk of **limit ambiguity** in underwriting authority granted to coverholder
+
+---
+
+### 📊 Bordereaux Obligations
+- **Monthly bordereaux reporting** – Explicitly required
+- Applies to coverholder as the delegated underwriting party
+- ⚠️ *No detail provided on bordereaux type (premium vs. claims vs. both)*
+
+---
+
+### 🗓️ Reporting Frequency
+- **Monthly** cycle confirmed for bordereaux submissions
+- ⚠️ *No additional reporting cadences specified (e.g., quarterly aggregates, ad hoc regulatory reports)*
+
+---
+
+### ⚠️ Unclear Wording
+- **Delegated authority limits** – Wording described as *"partially unclear"*; requires clarification or endorsement
+- **Escalation procedures for regulatory breaches** – *Not defined*; creates compliance gap
+- **DORA operational resilience obligations** – *Explicitly absent*; potential regulatory exposure for EU-regulated entities
+- **Sanctions compliance** – Referenced generally without procedural specificity; enforcement mechanism unclear
+
+---
+
+### 🔑 Key Drafting Gaps Summary
+| Area | Status |
+|---|---|
+| Delegated Authority Limits | ⚠️ Partially Unclear |
+| Escalation Procedures | ❌ Not Defined |
+| DORA Compliance | ❌ Not Included |
+| Bordereaux Frequency | ✅ Monthly Confirmed |
+| Sanctions Obligations | ⚠️ Vague Wording |
+
+def summary_agent(compliance_output, terms_output):
+    prompt = f"""
+    You are a senior insurance operations reviewer.
+
+    Based on the following analyses:
+
+    COMPLIANCE:
+    {compliance_output}
+
+    TECHNICAL TERMS:
+    {terms_output}
+
+    Provide:
+    - Top 5 risks
+    - Key contract weaknesses
+    - Priority actions
+    - Should this require human review? (Yes/No + reason)
+
+    Keep it concise and structured.
+    """
+
+    response = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=500,
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    return response.content[0].text
+     
+
+compliance = compliance_agent(contract_text)
+terms = terms_agent(contract_text)
+
+summary = summary_agent(compliance, terms)
+
+print("=== COMPLIANCE ===")
+print(compliance)
+
+print("\n=== TERMS ===")
+print(terms)
+
+print("\n=== SUMMARY ===")
+print(summary)
+     
+=== COMPLIANCE ===
+# Reinsurance Contract Compliance Review
+
+---
+
+## 1. Sanctions Clauses
+
+- ✅ General sanctions compliance obligation is present
+- The coverholder is required to comply with **all applicable sanctions laws**
+- ⚠️ No specific reference to named sanctions regimes (e.g., **OFAC, UN, EU, HMRC/OFSI**)
+- No sanctions screening procedures or breach notification requirements defined
+- No clause addressing sanctions-related contract termination rights
+
+---
+
+## 2. Regulatory Clauses
+
+- ✅ **Monthly bordereaux reporting obligations** are included
+- Coverholder bound to applicable sanctions laws (general regulatory reference)
+- ❌ No explicit **DORA** (Digital Operational Resilience Act) obligations
+- ❌ No reference to **Lloyd's/PRA/FCA** regulatory framework compliance
+- ❌ No defined escalation procedures for regulatory breaches
+
+---
+
+## 3. Missing Clauses
+
+| Missing Clause | Risk Level |
+|---|---|
+| DORA operational resilience obligations | 🔴 High |
+| Escalation procedures for regulatory breaches | 🔴 High |
+| Named sanctions regime references (OFAC, OFSI, EU) | 🔴 High |
+| Clear delegated authority limits | 🔴 High |
+| Sanctions breach notification & termination rights | 🟠 Medium |
+| Data protection / GDPR obligations | 🟠 Medium |
+| Audit rights clause | 🟠 Medium |
+| Business continuity / disaster recovery provisions | 🟠 Medium |
+| Sub-delegation restrictions | 🟠 Medium |
+| Dispute resolution mechanism | 🟡 Low–Medium |
+
+---
+
+## 4. Red Flags
+
+> 🚨 **Critical issues requiring immediate attention**
+
+1. **Unclear delegated authority limits** — Ambiguous wording creates risk of coverholder exceeding binding authority scope; potential for unintended liability exposure
+2. **No DORA compliance provisions** — Mandatory for EU-regulated entities from January 2025; absence creates regulatory breach risk
+3. **No escalation procedures for regulatory breaches** — Failure to define response protocols may result in delayed remediation and regulatory censure
+4. **Vague sanctions clause** — Generic language without named regimes or procedures is insufficient under current regulatory expectations
+5. **No termination trigger for sanctions violations** — Exposes reinsurer to continued liability if coverholder breaches sanctions laws
+
+---
+
+## 5. Human Review Required
+
+| Area | Reviewer | Priority |
+|---|---|---|
+| Delegated authority limit wording — legal clarification needed | Legal Counsel | 🔴 Immediate |
+| DORA compliance gap assessment | Compliance / IT Risk Officer | 🔴 Immediate |
+| Sanctions clause enhancement & regime-specific language | Sanctions Compliance Specialist | 🔴 Immediate |
+| Regulatory breach escalation protocol drafting |
+
+=== TERMS ===
+## Technical Term Extraction – Binding Authority Agreement Analysis
+
+---
+
+### 📊 Limits
+- **Delegated authority limits** – Present but **partially unclear wording**; scope and thresholds not fully defined
+- No explicit aggregate or per-risk limits identified in the extract
+
+---
+
+### 📋 Bordereaux Obligations
+- **Monthly bordereaux reporting** obligations confirmed
+- Reporting type not specified (premium bordereaux / claims bordereaux / both)
+- No mention of **data field requirements** or submission format standards
+
+---
+
+### 🗓️ Reporting Frequency
+- **Monthly** cycle stipulated for bordereaux submissions
+- No reference to **ad hoc** or **event-driven** reporting triggers
+- No escalation reporting timeline defined for regulatory breaches
+
+---
+
+### ⚠️ Unclear Wording Flags
+- **Delegated authority limits** – partially ambiguous; requires clarification
+- **Escalation procedures for regulatory breaches** – *absent/undefined*; material gap
+- **DORA compliance** – no operational resilience obligations included; potential regulatory exposure
+- **Sanctions compliance** – referenced but enforcement mechanism and monitoring process not detailed
+
+---
+
+### 🔴 Key Risk Observations
+> - Ambiguity in delegated authority limits creates **underwriting risk exposure**
+> - Absent escalation procedures represent a **regulatory and governance gap**
+> - DORA omission may constitute a **compliance deficiency** for EU-regulated entities
+
+=== SUMMARY ===
+# Senior Operations Review — Binding Authority Agreement
+
+---
+
+## 🔴 Top 5 Risks
+
+| # | Risk | Severity |
+|---|---|---|
+| 1 | **Unclear delegated authority limits** — potential for coverholder to exceed binding scope, creating unintended underwriting liability | Critical |
+| 2 | **No DORA compliance provisions** — mandatory from Jan 2025 for EU-regulated entities; absence constitutes a live regulatory breach risk | Critical |
+| 3 | **Vague sanctions clause** — no named regimes (OFAC/OFSI/EU/UN), no screening procedures, no breach notification or termination rights | Critical |
+| 4 | **No escalation procedures for regulatory breaches** — delayed remediation risk; exposes reinsurer to regulatory censure | High |
+| 5 | **No sanctions-triggered termination rights** — reinsurer remains exposed to continued liability if coverholder violates sanctions laws | High |
+
+---
+
+## ⚠️ Key Contract Weaknesses
+
+- **Bordereaux obligations** — monthly cycle confirmed but reporting type (premium/claims), data field requirements and submission format are undefined
+- **No GDPR/data protection clause** — material omission given data sharing inherent in bordereaux reporting
+- **No audit rights** — reinsurer cannot independently verify coverholder compliance or underwriting activity
+- **No sub-delegation restrictions** — coverholder could pass authority downstream without controls
+- **No business continuity provisions** — operational resilience gap compounding the DORA deficiency
+- **No dispute resolution mechanism** — absence creates uncertainty in event of disagreement on claims or authority scope
+
+---
+
+## ✅ Priority Actions
+
+1. **Immediate — Legal Counsel:** Clarify and redefine delegated authority limits with explicit per-risk and aggregate thresholds
+2. **Immediate — Sanctions Compliance Specialist:** Replace generic sanctions language with named regime references, screening obligations, breach notification protocols and termination trigger
+3. **Immediate — Compliance/IT Risk Officer:** Conduct DORA gap assessment and draft operational resilience obligations for contract insertion
+4. **Short-term — Compliance Team:** Draft and
+AI workflow for reinsurance operations
