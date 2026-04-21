@@ -159,6 +159,8 @@ Future work includes structured outputs, evaluation metrics, and integration int
 🚀 Next Steps
 Convert outputs to structured JSON
 Add Human-in-the-loop approval layer
+
+All contracts used in this project are synthetic and generated for demonstration purposes. No real client or proprietary data is included.
 Expand to claims triage workflows
 Deploy as internal underwriting/compliance tool
 🏷️ Tags
