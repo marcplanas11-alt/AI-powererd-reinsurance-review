@@ -58,3 +58,23 @@ Aligned with:
 DORA (EU Digital Operational Resilience Act)
 Sanctions frameworks (OFAC, EU, HMT/OFSI)
 Operational risk & auditability requirements# AI-powererd-reinsurance-review
+
+⚙️ How to Run
+pip install -r requirements.txt
+# Set your API key
+import os
+os.environ["ANTHROPIC_API_KEY"] = "your_key_here"
+# Run the workflow
+python main.py
+🧪 Example Use Case
+
+Input:
+
+Binding authority agreement with bordereaux obligations and sanctions clause...
+
+Output:
+
+Compliance risks identified
+Missing DORA obligations
+Delegated authority weaknesses
+Prioritised actions
