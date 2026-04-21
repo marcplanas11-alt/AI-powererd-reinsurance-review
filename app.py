@@ -7,12 +7,14 @@ st.set_page_config(page_title="Reinsurance Contract Review AI", layout="wide")
 
 st.title("AI-Powered Reinsurance Contract Review")
 st.write(
-    "Upload a reinsurance contract PDF to generate compliance, technical, and summary reviews."
+    "Upload a reinsurance contract PDF to generate a structured compliance, technical, and summary review."
 )
 
 api_key = st.text_input("Anthropic API Key", type="password")
+st.caption("Enter your Anthropic API key. The key is used only to run the review in your current session.")
 
 uploaded_file = st.file_uploader("Upload contract PDF", type=["pdf"])
+use_sample = st.checkbox("Use sample contract text instead of uploading a PDF")
 
 def extract_text_from_pdf(uploaded_file):
     reader = PdfReader(uploaded_file)
@@ -117,12 +119,21 @@ def summary_agent(client, compliance_output, terms_output):
 if st.button("Run Review", type="primary"):
     if not api_key:
         st.error("Please enter your Anthropic API key.")
-    elif not uploaded_file:
-        st.error("Please upload a PDF.")
+    elif not uploaded_file and not use_sample:
+        st.error("Please upload a PDF or use the sample input.")
     else:
         try:
-            with st.spinner("Extracting text from PDF..."):
-                contract_text = extract_text_from_pdf(uploaded_file)
+            with st.spinner("Preparing contract text..."):
+                if use_sample:
+                    contract_text = """
+                    This binding authority agreement includes monthly bordereaux reporting obligations.
+                    The coverholder must comply with all applicable sanctions laws.
+                    No explicit DORA-related operational resilience obligations are included.
+                    The agreement does not clearly define escalation procedures for regulatory breaches.
+                    The wording on delegated authority limits is partially unclear.
+                    """
+                else:
+                    contract_text = extract_text_from_pdf(uploaded_file)
 
             if not contract_text.strip():
                 st.error("No text could be extracted from the PDF.")
@@ -156,3 +167,8 @@ if st.button("Run Review", type="primary"):
 
         except Exception as e:
             st.error(f"Error: {e}")
+
+st.info(
+    "This tool is a proof of concept designed to support human review. "
+    "It does not replace legal, compliance, or underwriting judgement."
+)
