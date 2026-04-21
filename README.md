@@ -1,1 +1,60 @@
-# AI-powererd-reinsurance-review
+🧠 AI-Powered Reinsurance Contract Review
+📌 Problem
+
+Reinsurance contract review (especially binding authority agreements) is:
+
+time-consuming
+repetitive
+difficult to standardise
+highly dependent on manual expertise
+
+Critical risks (sanctions, DORA compliance, delegated authority limits) are often:
+
+inconsistently identified
+poorly documented
+hard to audit
+💡 Solution
+
+A three-agent AI workflow designed to automate and structure contract review:
+
+Compliance Agent → identifies regulatory risks, sanctions issues, and missing clauses
+Technical Terms Agent → extracts operational contract structure (limits, bordereaux, reporting)
+Summary Agent → consolidates outputs into actionable insights and prioritised risks
+
+Built using Anthropic Claude API.
+
+🏗️ Architecture
+Contract Text
+   ↓
+[Compliance Agent]
+   ↓
+[Technical Terms Agent]
+   ↓
+[Summary Agent]
+   ↓
+Structured Output
+   ↓
+Human Review
+📊 Example Output
+
+The system generates:
+
+sanctions analysis (incl. regime gaps)
+DORA compliance gaps
+missing clauses (GDPR, audit rights, escalation procedures)
+delegated authority weaknesses
+prioritised risk list
+actionable remediation steps
+🎯 Why This Matters (Insurance Context)
+
+This system directly addresses high-friction workflows in:
+
+MGA operations
+Lloyd’s delegated authority
+reinsurance contract onboarding
+
+Aligned with:
+
+DORA (EU Digital Operational Resilience Act)
+Sanctions frameworks (OFAC, EU, HMT/OFSI)
+Operational risk & auditability requirements# AI-powererd-reinsurance-review
