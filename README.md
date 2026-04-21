@@ -21,7 +21,14 @@ Critical risks (sanctions, DORA compliance, delegated authority limits) are ofte
 inconsistently identified
 poorly documented
 hard to audit
-💡 Solution
+
+## 💰 Impact
+
+Manual contract review: ~2–4 hours per agreement  
+AI-assisted review: minutes  
+
+→ potential 80%+ reduction in review time
+→ improved consistency and auditability
 
 A three-agent AI workflow designed to automate and structure contract review:
 
@@ -53,6 +60,7 @@ missing clauses (GDPR, audit rights, escalation procedures)
 delegated authority weaknesses
 prioritised risk list
 actionable remediation steps
+
 🎯 Why This Matters (Insurance Context)
 
 This system directly addresses high-friction workflows in:
