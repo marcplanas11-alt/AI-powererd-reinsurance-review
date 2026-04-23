@@ -130,12 +130,26 @@ Final decisions remain with human reviewers, aligning with regulatory expectatio
 
 ## ⚙️ How to Run
 
+### Web App (recommended)
+
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
+
+# 2. Launch the browser interface
+streamlit run app.py
+```
+
+The app opens automatically at **http://localhost:8501**.  
+Enter your Anthropic API key in the sidebar, upload a PDF (or use the built-in sample), and click **Run Review**.
+
+### Notebook
+
 ```bash
 pip install anthropic
-import os
-os.environ["ANTHROPIC_API_KEY"] = "your_api_key_here"
+```
 
-Run the notebook or Python script to execute the workflow.
+Open `reinsurance_contract_crew.ipynb` in Jupyter or Google Colab and run all cells.
 
 🧪 Example Use Case
 
