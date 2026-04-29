@@ -1,4 +1,3 @@
-import os
 import datetime
 import streamlit as st
 import anthropic
@@ -142,7 +141,7 @@ The Reinsurer reserves the right to audit the Coverholder's records. The frequen
 notice period for audits are not specified.
 """
 
-col_main, col_status = st.columns([3, 1])
+col_main = st.container()
 
 with col_main:
     if input_mode == "Upload PDF":
@@ -299,23 +298,23 @@ if run:
     elif input_mode == "Paste text" and not pasted_text.strip():
         st.error("⚠️ Please paste some contract text.")
     else:
+        # ── Extract text (before try so st.stop() isn't swallowed) ───────────
+        with st.spinner("📄 Extracting contract text…"):
+            if use_sample:
+                contract_text = SAMPLE_CONTRACT
+                source_label = "Sample contract"
+            elif input_mode == "Upload PDF":
+                contract_text = extract_text_from_pdf(uploaded_file)
+                source_label = uploaded_file.name
+            else:
+                contract_text = pasted_text
+                source_label = "Pasted text"
+
+        if not contract_text.strip():
+            st.error("No text could be extracted. Please check the file and try again.")
+            st.stop()
+
         try:
-            # ── Extract text ────────────────────────────────────────────────
-            with st.spinner("📄 Extracting contract text…"):
-                if use_sample:
-                    contract_text = SAMPLE_CONTRACT
-                    source_label = "Sample contract"
-                elif input_mode == "Upload PDF":
-                    contract_text = extract_text_from_pdf(uploaded_file)
-                    source_label = uploaded_file.name
-                else:
-                    contract_text = pasted_text
-                    source_label = "Pasted text"
-
-            if not contract_text.strip():
-                st.error("No text could be extracted. Please check the file and try again.")
-                st.stop()
-
             client = get_client(api_key)
 
             # ── Progress display ────────────────────────────────────────────
@@ -343,7 +342,15 @@ if run:
             # ── Metrics row ─────────────────────────────────────────────────
             m1, m2, m3, m4 = st.columns(4)
             word_count = len(contract_text.split())
-            compliance_flags = compliance_output.lower().count("red flag") + compliance_output.lower().count("⚠")
+            lower_out = compliance_output.lower()
+            # count both bare ⚠ and the variation-selector form ⚠️
+            compliance_flags = (
+                lower_out.count("red flag")
+                + lower_out.count("⚠️")  # ⚠️
+                + lower_out.count("⚠")         # ⚠  (bare, deduplicated below)
+            )
+            # Avoid double-counting: bare ⚠ also matches inside ⚠️
+            compliance_flags -= lower_out.count("⚠️")
             with m1:
                 st.markdown(
                     f'<div class="metric-box"><div class="value">{word_count:,}</div><div class="label">Contract words</div></div>',
@@ -351,12 +358,12 @@ if run:
                 )
             with m2:
                 st.markdown(
-                    f'<div class="metric-box"><div class="value">3</div><div class="label">Agents run</div></div>',
+                    '<div class="metric-box"><div class="value">3</div><div class="label">Agents run</div></div>',
                     unsafe_allow_html=True,
                 )
             with m3:
                 st.markdown(
-                    f'<div class="metric-box"><div class="value">{max(compliance_flags, 1)}</div><div class="label">Compliance flags</div></div>',
+                    f'<div class="metric-box"><div class="value">{compliance_flags}</div><div class="label">Compliance flags</div></div>',
                     unsafe_allow_html=True,
                 )
             with m4:
